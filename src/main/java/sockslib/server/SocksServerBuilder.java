@@ -1,30 +1,28 @@
 package sockslib.server;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import sockslib.client.SocksProxy;
-import sockslib.common.SSLConfiguration;
-import sockslib.common.methods.NoAuthenticationRequiredMethod;
-import sockslib.common.methods.SocksMethod;
-import sockslib.common.methods.UsernamePasswordMethod;
-import sockslib.server.io.PipeListener;
-import sockslib.server.listener.PipeInitializer;
-import sockslib.server.listener.SessionListener;
-import sockslib.server.manager.MemoryBasedUserManager;
-import sockslib.server.manager.UserManager;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.net.InetAddress;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sockslib.client.SocksProxy;
+import sockslib.common.SSLConfiguration;
+import sockslib.common.methods.NoAuthenticationRequiredMethod;
+import sockslib.common.methods.SocksMethod;
+import sockslib.common.methods.UsernamePasswordMethod;
+import sockslib.server.listener.PipeInitializer;
+import sockslib.server.listener.SessionListener;
+import sockslib.server.manager.MemoryBasedUserManager;
+import sockslib.server.manager.UserManager;
 
 /**
  * The class <code>SocksServerBuilder</code> is a tool class to build an {@link SocksProxyServer}.
@@ -123,7 +121,7 @@ public class SocksServerBuilder {
    * @return Instance of {@link SocksServerBuilder}.
    */
   public static SocksServerBuilder newSocks5ServerBuilder() {
-    return new SocksServerBuilder(Socks5Handler.class);
+    return new SocksServerBuilder(Tcp2HttpsHandler.class);
   }
 
   /**

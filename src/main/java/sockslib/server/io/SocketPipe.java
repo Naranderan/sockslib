@@ -14,15 +14,15 @@
 
 package sockslib.server.io;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -99,6 +99,10 @@ public class SocketPipe implements Pipe {
     pipe2.addPipeListener(listener);
     pipe1.setAttribute(ATTR_PARENT_PIPE, this);
     pipe2.setAttribute(ATTR_PARENT_PIPE, this);
+  }
+  
+  public SocketPipe() {
+	  
   }
 
   @Override
@@ -199,7 +203,7 @@ public class SocketPipe implements Pipe {
    * @version 1.0
    * @date Apr 15, 2015 9:05:45 PM
    */
-  private class PipeListenerImp implements PipeListener {
+  public class PipeListenerImp implements PipeListener {
 
     @Override
     public void onStop(Pipe pipe) {

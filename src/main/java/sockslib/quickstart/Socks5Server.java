@@ -1,7 +1,15 @@
 package sockslib.quickstart;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.util.Arrays;
+
+import javax.annotation.Nullable;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import sockslib.client.SSLSocks5;
 import sockslib.client.Socks5;
 import sockslib.client.SocksProxy;
@@ -19,12 +27,6 @@ import sockslib.server.manager.User;
 import sockslib.server.manager.UserManager;
 import sockslib.utils.Arguments;
 import sockslib.utils.Timer;
-
-import javax.annotation.Nullable;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.util.Arrays;
 
 /**
  * The class <code>Socks5Server</code> can create a simple Socks5 server.

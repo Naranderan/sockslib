@@ -14,13 +14,7 @@
 
 package sockslib.server;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import sockslib.client.SocksProxy;
-import sockslib.common.methods.SocksMethod;
-import sockslib.common.net.MonitorSocketWrapper;
-import sockslib.common.net.NetworkMonitor;
-import sockslib.server.listener.PipeInitializer;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -31,7 +25,14 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sockslib.client.SocksProxy;
+import sockslib.common.methods.SocksMethod;
+import sockslib.common.net.MonitorSocketWrapper;
+import sockslib.common.net.NetworkMonitor;
+import sockslib.server.listener.PipeInitializer;
 
 /**
  * The class <code>BasicSocksProxyServer</code> is a implementation of {@link SocksProxyServer}

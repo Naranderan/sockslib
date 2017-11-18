@@ -14,27 +14,27 @@
 
 package sockslib.server;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import sockslib.client.SocksProxy;
 import sockslib.client.SocksSocket;
 import sockslib.common.ProtocolErrorException;
 import sockslib.common.SocksException;
 import sockslib.common.methods.SocksMethod;
 import sockslib.server.io.Pipe;
-import sockslib.server.io.PipeListener;
 import sockslib.server.io.SocketPipe;
 import sockslib.server.msg.CommandMessage;
 import sockslib.server.msg.CommandResponseMessage;
 import sockslib.server.msg.MethodSelectionMessage;
 import sockslib.server.msg.MethodSelectionResponseMessage;
 import sockslib.server.msg.ServerReply;
-
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 /**
  * The class <code>Socks5Handler</code> represents a handler that can handle SOCKS5 protocol.
@@ -83,14 +83,14 @@ public class Socks5Handler implements SocksHandler {
     MethodSelectionMessage msg = new MethodSelectionMessage();
     session.read(msg);
 
-    if (msg.getVersion() != VERSION) {
+    if (msg.getVersion() != getVersion()) {
       throw new ProtocolErrorException();
     }
     SocksMethod selectedMethod = methodSelector.select(msg);
 
     logger.debug("SESSION[{}] Response client:{}", session.getId(), selectedMethod.getMethodName());
     // send select method.
-    session.write(new MethodSelectionResponseMessage(VERSION, selectedMethod));
+    session.write(new MethodSelectionResponseMessage(getVersion(), selectedMethod));
 
     // do method.
     selectedMethod.doMethod(session);
@@ -169,7 +169,7 @@ public class Socks5Handler implements SocksHandler {
     }
 
     CommandResponseMessage responseMessage =
-        new CommandResponseMessage(VERSION, reply, bindAddress, bindPort);
+        new CommandResponseMessage(getVersion(), reply, bindAddress, bindPort);
     session.write(responseMessage);
     if (reply != ServerReply.SUCCEEDED) { // 如果返回失败信息，则退出该方法。
       session.close();
@@ -206,11 +206,11 @@ public class Socks5Handler implements SocksHandler {
     Socket socket = null;
     logger.info("Create TCP server bind at {} for session[{}]", serverSocket
         .getLocalSocketAddress(), session.getId());
-    session.write(new CommandResponseMessage(VERSION, ServerReply.SUCCEEDED, serverSocket
+    session.write(new CommandResponseMessage(getVersion(), ServerReply.SUCCEEDED, serverSocket
         .getInetAddress(), bindPort));
 
     socket = serverSocket.accept();
-    session.write(new CommandResponseMessage(VERSION, ServerReply.SUCCEEDED, socket
+    session.write(new CommandResponseMessage(getVersion(), ServerReply.SUCCEEDED, socket
         .getLocalAddress(), socket.getLocalPort()));
 
     Pipe pipe = new SocketPipe(session.getSocket(), socket);
@@ -240,7 +240,7 @@ public class Socks5Handler implements SocksHandler {
     InetSocketAddress socketAddress = (InetSocketAddress) udpRelayServer.start();
     logger.info("Create UDP relay server at[{}] for {}", socketAddress, commandMessage
         .getSocketAddress());
-    session.write(new CommandResponseMessage(VERSION, ServerReply.SUCCEEDED, InetAddress
+    session.write(new CommandResponseMessage(getVersion(), ServerReply.SUCCEEDED, InetAddress
         .getLocalHost(), socketAddress.getPort()));
     while (udpRelayServer.isRunning()) {
       try {
@@ -328,5 +328,9 @@ public class Socks5Handler implements SocksHandler {
   public void setSocksProxyServer(SocksProxyServer socksProxyServer) {
     this.socksProxyServer = socksProxyServer;
   }
+
+public static int getVersion() {
+	return VERSION;
+}
 
 }
